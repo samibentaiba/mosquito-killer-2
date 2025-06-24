@@ -60,17 +60,20 @@ const handleQuantityChangeUtil = (
   setQuantity((prev) => (increment ? prev + 1 : Math.max(1, prev - 1)));
 };
 
-const handleSubmit = async (formData: {
-  state: string;
-  stateCode: string;
-  city: string;
-  phoneNumber: string;
-  deliveryPrice: number;
-  fullName: string;
-  totalPrice: number;
-  quantity: number;
-  wilayaAscii?: string;
-}) => {
+const handleSubmit = async (
+  formData: {
+    state: string;
+    stateCode: string;
+    city: string;
+    phoneNumber: string;
+    deliveryPrice: number;
+    fullName: string;
+    totalPrice: number;
+    quantity: number;
+    wilayaAscii?: string;
+  },
+  setCooldownActive: React.Dispatch<React.SetStateAction<boolean>>
+) => {
   const requiredFields = [
     "state",
     "stateCode",
@@ -106,10 +109,28 @@ const handleSubmit = async (formData: {
       throw new Error(result.error || "Unknown error");
     }
 
+    // ✅ Show toast
     toast({
       title: "تم تأكيد الطلب",
       description: "تم إرسال معلوماتك بنجاح وسنتواصل معك قريباً",
     });
+
+    // ✅ Enable cooldown
+    setCooldownActive(true);
+    setTimeout(() => setCooldownActive(false), 10000);
+
+    // ✅ Redirect with query params
+    const query = new URLSearchParams({
+      orderId: result.orderId ?? "123456", // fallback
+      name: formData.fullName,
+      phone: formData.phoneNumber,
+      wilaya: formData.state,
+      city: formData.city,
+      quantity: formData.quantity.toString(),
+      total: formData.totalPrice.toString(),
+    }).toString();
+
+    window.location.href = `/thank-you?${query}`;
   } catch (error) {
     console.error("Submit error:", error);
     toast({
@@ -245,6 +266,7 @@ export default function Page() {
   const [selectedWilayaCode, setSelectedWilayaCode] = useState("");
   const [selectedWilayaAscii, setSelectedWilayaAscii] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
+  const [cooldownActive, setCooldownActive] = useState(false);
 
   // Price calculations
   const basePrice = 1900;
@@ -433,13 +455,18 @@ export default function Page() {
             <div className="space-y-2">
               <div className="relative">
                 <Input
+                  type="tel" // 💡 يجعل الهواتف تعرض لوحة أرقام دائمًا
+                  inputMode="numeric" // 💡 يشير إلى أن الإدخال أرقام
+                  pattern="[0-9]*" // يساعد بعض المتصفحات على التحقق من الأرقام
                   placeholder="رقم الهاتف"
                   value={formData.phoneNumber}
-                  onChange={(e) =>
-                    handleInputChange("phoneNumber", e.target.value)
-                  }
+                  onChange={(e) => {
+                    const onlyDigits = e.target.value.replace(/\D/g, ""); // إزالة أي شيء غير رقم
+                    handleInputChange("phoneNumber", onlyDigits);
+                  }}
                   className="pr-10 text-right border-gray-200 focus:border-purple-400 transition-colors"
                 />
+
                 <Phone className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
               </div>
             </div>
@@ -486,17 +513,35 @@ export default function Page() {
 
             {/* Submit Button */}
             <Button
-              onClick={() =>
-                handleSubmit({
-                  ...formData,
-                  totalPrice,
-                  quantity,
-                  deliveryPrice,
-                })
-              }
+              disabled={cooldownActive}
+              onClick={() => {
+                const testMode = false;
+                setCooldownActive(true);
+                if (testMode) {
+                  toast({
+                    title: "وضع الاختبار",
+                    description:
+                      "🚀 تمت معالجة المعلومات بنجاح (لم يتم إرسال الطلب الحقيقي).",
+                  });
+                  setCooldownActive(true);
+                  setTimeout(() => setCooldownActive(false), 10000);
+                } else {
+                  handleSubmit(
+                    {
+                      ...formData,
+                      totalPrice,
+                      quantity,
+                      deliveryPrice,
+                    },
+                    setCooldownActive
+                  ); // ✅ pass cooldown setter
+                }
+              }}
               className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
             >
-              انقر هنا لتأكيد الطلب
+              {cooldownActive
+                ? "⏳ الرجاء الانتظار..."
+                : "انقر هنا لتأكيد الطلب"}
             </Button>
           </CardContent>
         </Card>

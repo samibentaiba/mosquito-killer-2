@@ -1,3 +1,8 @@
+"use client"; // ✅ Add this at the top
+
+import * as React from "react";
+
+
 import { useToast } from "@/app/hooks/use-toast"
 import {
   Toast,
