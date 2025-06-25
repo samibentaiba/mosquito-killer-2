@@ -32,6 +32,8 @@ export async function POST(req: Request) {
       payment_method: "cod",
       payment_method_title: "الدفع عند الاستلام",
       set_paid: false,
+      status: "processing",
+      created_via: "checkout",
       billing: {
         first_name: firstName,
         last_name: lastName,

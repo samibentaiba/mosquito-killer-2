@@ -145,7 +145,7 @@ export default function Render() {
                 className="text-2xl font-bold text-blue-600 hover:text-blue-800 transition-colors"
                 dir="ltr"
               >
-                +213 555 123 456
+                05 42 95 56 68 54
               </a>
             </div>
             <p className="text-sm text-gray-600">
