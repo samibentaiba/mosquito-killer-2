@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# **Mosquito Killer DZ Landing Page**
 
-## Getting Started
+A streamlined e-commerce landing page designed for the Algerian market to sell mosquito killer devices. Features dynamic shipping calculation, comprehensive Wilaya/City selection, and direct integration with WooCommerce for order processing.
 
-First, run the development server:
+## **Features**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+* **Optimized Checkout Flow**: Single-page order form designed for high conversion with "Cash on Delivery" (COD) focus.  
+* **Dynamic Location Data**:  
+  * Automatically loads Algerian Wilayas and Communes from a local CSV database.  
+  * Smart filtering of cities based on selected state.  
+* **Smart Shipping Calculation**:  
+  * Real-time delivery cost estimation based on the selected state (Wilaya) using mapped zones.  
+* **WooCommerce Integration**:  
+  * Direct order submission to a WordPress/WooCommerce backend via secure API routes.  
+  * Handles customer billing and shipping details automatically.  
+* **Responsive Design**: Fully responsive UI built with Tailwind CSS 4, optimized for mobile users.  
+* **Interactive UI**: Uses Radix UI components for a polished user experience (Toasts, Selects, Cards, Dialogs).
+
+## **Tech Stack**
+
+* **Framework**: [Next.js 15](https://nextjs.org/) (App Router)  
+* **Language**: [TypeScript](https://www.typescriptlang.org/)  
+* **Styling**: [Tailwind CSS 4](https://tailwindcss.com/) & tw-animate-css  
+* **Icons**: [Lucide React](https://lucide.dev/)  
+* **UI Components**: Built with [Radix UI](https://www.radix-ui.com/) primitives (Select, Toast, Card, etc.)  
+* **Data Parsing**: [Papaparse](https://www.papaparse.com/) for CSV handling  
+* **Package Manager**: Bun / NPM
+
+## **Getting Started**
+
+### **Prerequisites**
+
+Ensure you have Node.js or Bun installed on your machine.
+
+### **Installation**
+
+1. Install the dependencies:
+
+npm install  
+\# or  
+bun install
+
+2. Run the development server:
+
+npm run dev  
+\# or  
 bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Open [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## **Usage**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Location Selection**: Select your Wilaya (State) and City from the dropdowns. The system automatically calculates shipping costs based on the zone.  
+2. **Customer Details**: Enter Full Name and Phone Number. The form validates inputs to ensure accurate delivery data.  
+3. **Order Summary**: Review the total price, which dynamically updates based on quantity and shipping fees.  
+4. **Submission**: Click to confirm. The order is sent to the backend, and you are redirected to a Thank You page with order details.
 
-## Learn More
+## **Project Structure**
 
-To learn more about Next.js, take a look at the following resources:
+* app:  
+  * page.tsx: Main landing page and order form logic.  
+  * api/submit-order: Server-side route for handling WooCommerce API requests.  
+  * thank-you: Confirmation page component.  
+* app/components/ui: Reusable primitive components (Buttons, Inputs, Selects, Toasts).  
+* public/data:  
+  * algeria\_cities.csv: Database of Algerian administrative divisions.  
+  * ShippingData.json: Configuration for shipping zones and costs.  
+* lib/utils.ts: Utility functions for class merging and styling.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## **Learn More**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+To learn more about the technologies used in this project:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* [Next.js Documentation](https://nextjs.org/docs)  
+* [Tailwind CSS Documentation](https://tailwindcss.com/docs)  
+* [Radix UI Documentation](https://www.radix-ui.com/)
